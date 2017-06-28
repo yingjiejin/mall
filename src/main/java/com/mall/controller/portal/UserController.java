@@ -40,6 +40,12 @@ public class UserController {
         return response;
     }
 
+    /**
+     * 登出
+     *
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "logout.do", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<String> logout(HttpSession session) {
@@ -47,18 +53,37 @@ public class UserController {
         return ServerResponse.createBySuccess();
     }
 
+    /**
+     * 注册
+     *
+     * @param user
+     * @return
+     */
     @RequestMapping(value = "register.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> register(User user) {
         return iUserService.register(user);
     }
 
+    /**
+     * 校验
+     *
+     * @param str
+     * @param type
+     * @return
+     */
     @RequestMapping(value = "check_valid.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> checkValid(String str, String type) {
         return iUserService.checkValid(str, type);
     }
 
+    /**
+     * 获取用户信息
+     *
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "get_user_info.do", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<User> getUserInfo(HttpSession session) {
@@ -69,6 +94,12 @@ public class UserController {
         return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
     }
 
+    /**
+     * 找回密码问题
+     *
+     * @param username
+     * @return
+     */
     @RequestMapping(value = "forget_get_question.do", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<String> forgetGetQuestion(String username) {
