@@ -105,4 +105,39 @@ public class UserController {
     public ServerResponse<String> forgetGetQuestion(String username) {
         return iUserService.selectQuestion(username);
     }
+
+    /**
+     * 使用本地缓存检查问题答案
+     *
+     * @param username
+     * @param question
+     * @param answer
+     * @return
+     */
+    @RequestMapping(value = "forget_check_answer.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> forgetCheckAnswer(String username, String question, String answer) {
+        return iUserService.checkAnswer(username, question, answer);
+    }
+
+    /**
+     * 重置密码
+     *
+     * @param username
+     * @param passwordNew
+     * @param forgetToken
+     * @return
+     */
+    @RequestMapping(value = "forget_rest_password.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> forgetRestPassword(String username, String passwordNew, String forgetToken) {
+        return iUserService.forgetRestPassword(username, passwordNew, forgetToken);
+    }
+
+    public ServerResponse<String> resetPassword(HttpSession session, String passswordOld, String passwordNew) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+            // TODO: 2017/7/2
+        return null;
+
+    }
 }
