@@ -134,10 +134,21 @@ public class UserController {
         return iUserService.forgetRestPassword(username, passwordNew, forgetToken);
     }
 
+    /**
+     * 重置密码
+     *
+     * @param session
+     * @param passswordOld
+     * @param passwordNew
+     * @return
+     */
+    @RequestMapping(value = "rest_password.do", method = RequestMethod.POST)
+    @ResponseBody
     public ServerResponse<String> resetPassword(HttpSession session, String passswordOld, String passwordNew) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
-            // TODO: 2017/7/2
-        return null;
-
+        if (user == null) {
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+        return iUserService.resetPassword(passswordOld, passwordNew, user);
     }
 }
