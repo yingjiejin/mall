@@ -32,7 +32,7 @@ public class UserServiceImpl implements IUserService {
         //密码登录MD5
         String md5Password = MD5Util.MD5EncodeUtf8(password);
 
-        User user = userMapper.selectLogin(username, password);
+        User user = userMapper.selectLogin(username, md5Password);
         if (user == null) {
             return ServerResponse.createByErrorMessage("密码错误");
         }
