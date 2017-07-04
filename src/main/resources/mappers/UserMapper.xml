@@ -29,12 +29,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.mall.pojo.User">
-    insert into mmall_user (id, username, password, 
-      email, phone, question, 
-      answer, role, create_time, 
+    insert into mmall_user (id, username, password,
+      email, phone, question,
+      answer, role, create_time,
       update_time)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR},
       #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, now(),
       now())
   </insert>
@@ -153,7 +153,7 @@
   </update>
 
     <select id="checkUsername" resultType="int" parameterType="string">
-    SELECT COUNT (1) FROM mmall_user
+    SELECT COUNT(1) FROM mmall_user
     WHERE username = #{username}
   </select>
     <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
@@ -164,11 +164,11 @@
         AND password = #{password}
     </select>
     <select id="checkEmail" resultType="int" parameterType="string">
-    SELECT count(1) FROM mmall_user
+    SELECT COUNT(1) FROM mmall_user
     WHERE email = #{email}
   </select>
 
-    <select id="selectQuestionByUsername" resultMap="string" parameterType="string">
+    <select id="selectQuestionByUsername" resultType="string" parameterType="string">
         SELECT question FROM mmall_user
         WHERE username = #{username}
     </select>
@@ -186,9 +186,16 @@
     </update>
 
     <select id="checkPassword" resultType="int" parameterType="map">
-        SELECT COUNT (1)
+        SELECT COUNT(1)
         FROM mmall_user
         WHERE id = #{userId}
         AND password = #{password}
+    </select>
+
+    <select id="checkEmailByUserId" resultType="int" parameterType="map">
+        SELECT COUNT(1)
+        FROM mmall_user
+        WHERE email = #{email}
+        AND id != #{userId}
     </select>
 </mapper>

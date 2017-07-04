@@ -1,6 +1,7 @@
 package com.mall.controller.portal;
 
 import com.mall.common.Const;
+import com.mall.common.ResponseCode;
 import com.mall.common.ServerResponse;
 import com.mall.pojo.User;
 import com.mall.service.IUserService;
@@ -46,7 +47,7 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping(value = "logout.do", method = RequestMethod.GET)
+    @RequestMapping(value = "logout.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> logout(HttpSession session) {
         session.removeAttribute(Const.CURRENT_USER);
@@ -84,7 +85,7 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping(value = "get_user_info.do", method = RequestMethod.GET)
+    @RequestMapping(value = "get_user_info.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getUserInfo(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -100,7 +101,7 @@ public class UserController {
      * @param username
      * @return
      */
-    @RequestMapping(value = "forget_get_question.do", method = RequestMethod.GET)
+    @RequestMapping(value = "forget_get_question.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetGetQuestion(String username) {
         return iUserService.selectQuestion(username);
@@ -135,7 +136,7 @@ public class UserController {
     }
 
     /**
-     * 重置密码
+     * 登录状态中重置密码
      *
      * @param session
      * @param passswordOld
@@ -151,4 +152,46 @@ public class UserController {
         }
         return iUserService.resetPassword(passswordOld, passwordNew, user);
     }
+
+    /**
+     * 更新个人信息
+     *
+     * @param session
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "update_information.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> update_information(HttpSession session, User user) {
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+        user.setId(currentUser.getId());
+        user.setUsername(currentUser.getUsername());
+        ServerResponse<User> response = iUserService.update_information(user);
+        if (response.isSuccess()) {
+            session.setAttribute(Const.CURRENT_USER, response.getData());
+        }
+        return response;
+    }
+
+    /**
+     * 获取用户的详情信息
+     *
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "get_information.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> get_information(HttpSession session) {
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "未登录需要强制登录");
+        }
+        return iUserService.get_information(currentUser.getId());
+    }
+
+
+
 }

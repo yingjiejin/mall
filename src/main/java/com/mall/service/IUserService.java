@@ -23,4 +23,8 @@ public interface IUserService {
     ServerResponse<String> forgetRestPassword(String username, String passwordNew, String forgetToken);
 
     ServerResponse<String> resetPassword(String passswordOld, String passwordNew, User user);
+
+    ServerResponse<User> update_information(User user);
+
+    ServerResponse<User> get_information(Integer userId);
 }
