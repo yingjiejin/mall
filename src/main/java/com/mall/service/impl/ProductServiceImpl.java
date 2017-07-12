@@ -2,16 +2,17 @@ package com.mall.service.impl;
 
 import com.mall.common.ResponseCode;
 import com.mall.common.ServerResponse;
+import com.mall.dao.CategoryMapper;
 import com.mall.dao.ProductMapper;
+import com.mall.pojo.Category;
 import com.mall.pojo.Product;
 import com.mall.service.IProductService;
+import com.mall.util.DateTimeUtil;
 import com.mall.util.PropertiesUtil;
 import com.mall.vo.ProductDetailVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Properties;
 
 /**
  * @Author: jin
@@ -22,6 +23,8 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private ProductMapper productMapper;
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     public ServerResponse saveOrUpdateProduct(Product product) {
         if (product != null) {
@@ -72,11 +75,12 @@ public class ProductServiceImpl implements IProductService {
         if (product == null) {
             return ServerResponse.createByErrorMessage("产品已下架或者删除");
         }
-        ProductDetailVo productDetailVo
+        ProductDetailVo productDetailVo = assembleProductDetailVo(product);
+        return ServerResponse.createBySuccess(productDetailVo);
 
     }
 
-    private assembleProductDetailVo(Product product) {
+    private ProductDetailVo assembleProductDetailVo(Product product) {
         ProductDetailVo productDetailVo = new ProductDetailVo();
         productDetailVo.setId(product.getId());
         productDetailVo.setSubtitle(product.getSubtitle());
@@ -88,11 +92,22 @@ public class ProductServiceImpl implements IProductService {
         productDetailVo.setName(product.getName());
         productDetailVo.setStatus(product.getStatus());
         productDetailVo.setStock(product.getStock());
-//todo
+
         //imageHost
-        productDetailVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix",""));
+        productDetailVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix", "http://img.happymmall.com/"));
+
         //parentCategoryId
+        Category category = categoryMapper.selectByPrimaryKey(product.getCategoryId());
+        if (category == null) {
+            productDetailVo.setParentCategoryId(0);//默认根节点
+        } else {
+            productDetailVo.setParentCategoryId(category.getParentId());
+        }
+
         //createTime
+        productDetailVo.setCreateTime(DateTimeUtil.DateToStr(product.getCreateTime()));
         //updateTime
+        productDetailVo.setUpdateTime(DateTimeUtil.DateToStr(product.getUpdateTime()));
+        return productDetailVo;
     }
 }
