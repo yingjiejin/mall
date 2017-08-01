@@ -1,12 +1,15 @@
 package com.mall.controller.backend;
 
+import com.google.common.collect.Maps;
 import com.mall.common.Const;
 import com.mall.common.ResponseCode;
 import com.mall.common.ServerResponse;
 import com.mall.pojo.Product;
 import com.mall.pojo.User;
+import com.mall.service.IFileService;
 import com.mall.service.IProductService;
 import com.mall.service.IUserService;
+import com.mall.util.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * @Author: jin
@@ -29,6 +33,8 @@ public class ProductManageController {
     private IUserService iUserService;
     @Autowired
     private IProductService iProductService;
+    @Autowired
+    private IFileService iFileService;
 
     /**
      * 保存产品
@@ -145,7 +151,13 @@ public class ProductManageController {
     @ResponseBody
     public ServerResponse upload(MultipartFile file, HttpServletRequest request) {
         String path = request.getSession().getServletContext().getRealPath("upload");
-        return null;
+        String targetFileName = iFileService.upload(file, path);
+        String url = PropertiesUtil.getProperty("") + targetFileName;
+
+        Map fileMap = Maps.newHashMap();
+        fileMap.put("uri", targetFileName);
+        fileMap.put("url", url);
+        return ServerResponse.createBySuccess(fileMap);
     }
 
 

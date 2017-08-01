@@ -1,6 +1,8 @@
 package com.mall.service.impl;
 
+import com.google.common.collect.Lists;
 import com.mall.service.IFileService;
+import com.mall.util.FTPUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,8 +38,12 @@ public class FileServiceImpl implements IFileService {
         try {
             file.transferTo(targetFile);
             //文件已经上传成功
-            //todo 将targetFile上传到FTP服务器上
-            //todo 上传完之后,删除upload下的文件
+
+            FTPUtil.uploadFile(Lists.<File>newArrayList(targetFile));
+            //已经上传到ftp服务器
+
+            targetFile.delete();
+
         } catch (IOException e) {
             logger.error("上传文件异常", e);
             return null;
