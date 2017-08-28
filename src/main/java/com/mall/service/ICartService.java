@@ -10,4 +10,12 @@ import com.mall.vo.CartVo;
 public interface ICartService {
 
     ServerResponse<CartVo> add(Integer userId, Integer productId, Integer count);
+
+    ServerResponse<CartVo> update(Integer userId, Integer productId, Integer count);
+
+    ServerResponse<CartVo> delete(Integer userId, String productIds);
+
+    ServerResponse<CartVo> list(Integer userId);
+
+    ServerResponse<CartVo> selectOrUnSelectAll(Integer userId, Integer checked);
 }
