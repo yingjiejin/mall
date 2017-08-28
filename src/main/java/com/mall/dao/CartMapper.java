@@ -1,6 +1,9 @@
 package com.mall.dao;
 
 import com.mall.pojo.Cart;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 public interface CartMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,11 @@ public interface CartMapper {
     int updateByPrimaryKeySelective(Cart record);
 
     int updateByPrimaryKey(Cart record);
+
+    Cart selectCartByUserIdProductId(@RequestParam("userId") Integer userId, @RequestParam("productId") Integer productId);
+
+    List<Cart> selectCartByUserId(Integer userId);
+
+    int selectCartProductCheckedStatusByUserId(Integer userId);
+
 }
