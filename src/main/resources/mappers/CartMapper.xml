@@ -147,9 +147,16 @@
         </if>
     </delete>
 
-    <update id="checkedOrUnCheckedAllProduct" parameterType="map">
-        UPDATE mmall_cart SET checked = #{checked}
-       update_time = now()
-       WHERE user_id = #{userId}
+    <update id="checkedOrUnCheckedProduct" parameterType="map">
+        UPDATE mmall_cart SET checked = #{checked},
+        update_time = now()
+        WHERE user_id = #{userId}
+        <if test="productId != null">
+            AND product_id = #{productId}
+        </if>
     </update>
+
+    <select id="selectCartProductCount" parameterType="int" resultType="int">
+        SELECT NULLIF(SUM(quantity),0) as count FROM mmall_cart WHERE user_id = #{userId}
+    </select>
 </mapper>
